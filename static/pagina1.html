@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+<head>
+    <title>Control Manual</title>
+    <meta charset="utf-8">
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="css/pagina1.css">
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        var socket = io.connect();
+
+        //------------- información venida desde el servidor web--------------
+
+        socket.on('contadorPaneo', paneo);
+        socket.on('contadorInclinacion', inclinacion);
+        socket.on('estadoDelServicio1', estado);
+        socket.on('proximoPaneo', siguientePaneo);
+        socket.on('proximaInclinacion', siguienteInclinacion);
+
+        function paneo(data) {
+            var p = ((JSON.parse(data) * 360) / 800);
+            document.getElementById("contadorP").innerHTML = "Paneo actual: " + p + "°";
+        }
+
+        function inclinacion(data) {
+            var i = ((JSON.parse(data) * 360) / 800);
+            document.getElementById("contadorI").innerHTML = "Inclinación actual: " + i + "°";
+        }
+
+        function estado(data) {
+            var e = JSON.parse(data);
+            if (e == 1) {
+                document.getElementById("estado").innerHTML = "Estado: Encendido";
+            } else {
+                document.getElementById("estado").innerHTML = "Estado: Detenido";
+            }
+        }
+
+        function siguientePaneo(data) {
+            var sp = ((JSON.parse(data) * 360) / 800);
+            document.getElementById("sp").innerHTML = "Siguiente posición de Paneo: " + sp + "°";
+        }
+
+        function siguienteInclinacion(data) {
+            var si = ((JSON.parse(data) * 360) / 800);
+            document.getElementById("si").innerHTML = "Siguiente posición de Inclinación: " + si + "°";
+        }
+
+        //------------------ información enviada al servidor web ------------
+
+        function paneo1() {
+            var formulario = document.forms["usuarioForms"];
+            var registro = {
+                "posicion": formulario.elements[0].value
+            };
+            var paneo = Math.round((registro.posicion * 800) / 360);
+            socket.emit('posicionPaneo', paneo);
+        }
+
+        function inclinacion1() {
+            var formulario1 = document.forms["usuarioForms1"];
+            var registro1 = {
+                "posicion": formulario1.elements[0].value
+            };
+            var inclinacion = Math.round((registro1.posicion * 400) / 180);
+            socket.emit('posicionInclinacion', inclinacion);
+        }
+
+        function encender(data) {
+            socket.emit('inicioManual', data);
+        }
+
+        function Reset() {
+            socket.emit('posicionPaneo', 0);
+            socket.emit('posicionInclinacion', 0);
+            socket.emit('inicioManual', 1);
+        }
+
+        window.onload = function() {
+            socket.emit('servicio', 1);
+        }
+    </script>
+</head>
+<body>
+
+    <div class="proximasPosiciones">
+        <h3 id="sp" align="center">Paneo</h3>
+        <h3 id="si" align="center">Inclinación</h3>
+    </div>
+
+    <div class="ayuda">
+        <h3 align="center">Ayuda</h3>
+        <dl>
+            <dt><b>Actualizar</b></dt>
+            <dd>Actualiza la interfaz web.</dd>
+        </dl>
+        <dl>
+            <dt><b>Encender</b></dt>
+            <dd>Inicia o reanuda el sistema.</dd>
+        </dl>
+        <dl>
+            <dt><b>Detener</b></dt>
+            <dd>Pausa la ejecución del sistema.</dd>
+        </dl>
+        <dl>
+            <dt><b>Reset</b></dt>
+            <dd>Ordena al sistema ir a la posición inicial (0°).</dd>
+        </dl>
+    </div>
+
+    <div class="container">
+        <p id="estado">Estado: Detenido</p>
+        <ul>
+            <li><a onclick="window.location.reload()">Actualizar</a></li>
+            <li><a onclick="Reset()">Reset</a></li>
+            <li><a onclick="encender(1)">Encender</a></li>
+            <li><a onclick="encender(0)">Detener</a></li>
+        </ul>
+    </div>
+
+    <h2 id="contadorP"> contador</h2>
+    <h2 id="contadorI"> contador</h2>
+
+    <div class="paneo">
+        <h2>Ingrese Paneo</h2>
+        <form action="javascript:void(0)" name="usuarioForms" onsubmit="paneo1()">
+            <input type="number" style="width:200px; height:15px" min="0" max="360" placeholder="Ingrese un valor entre 0 y 360°" required autofocus>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+    <div class="inclinacion">
+        <h2>Ingrese Inclinación</h2>
+        <form action="javascript:void(0)" name="usuarioForms1" onsubmit="inclinacion1()">
+            <input type="number" style="width:200px; height:15px" min="0" max="180" placeholder="Ingrese un valor entre 0 y 180°" required>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+</body>
+</html>

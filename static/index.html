@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+    <title>BeagleBone Black</title>
+    <meta charset="utf-8">
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <h1 align="center">Montura MADE</h1>
+
+    <script>
+        var socket = io.connect();
+
+        //------------- información venida desde el servidor web-------------
+
+        socket.on('estadoSistema', sistema);
+
+        var e;
+
+        function sistema(data) {
+            e = data.Estado;
+            if (e == 1) document.getElementById("state").innerHTML = "Estado del sistema: Encendido";
+            else {
+                document.getElementById("state").innerHTML = "Estado del sistema: Detenido";
+            }
+            var t = ( 1 / (data.Tiempo * 0.002));
+            document.getElementById("speedStep").innerHTML = "Velocidad actual: " + t + " pasos / seg";
+        }
+
+        //------------------ información enviada al servidor web ------------
+
+        function on(data) {
+            socket.emit('detener', data);
+        }
+
+        function speed() {
+            var opcion = document.form.option.value
+            if (e != 1 && opcion != null && opcion.length != 0) {
+                socket.emit('velocidad', opcion);
+            }
+        }
+
+        window.onload = function() {
+            socket.emit('servicio', 0);
+        }
+    </script>
+
+</head>
+<body>
+
+    <div class="container">
+        <h3 id="state">Estado del sistema:</h3>
+        <ul class="ul1">
+            <li class="li1"><a class="a1" onclick="on(1)">Encender</a></li>
+            <li class="li1"><a class="a1" onclick="on(0)">Detener</a></li>
+        </ul>
+    </div>
+
+    <form class="adjustTime" name="form" action="#">
+        <h3>Ajuste de velocidad de los motores</h3>
+        <h3 id="speedStep">Velocidad actual:</h3>
+        <select style="width:80px; height:20px" name="option" id="option">
+            <option value="" selected></option>
+            <option value="10">50 </option>
+            <option value="12.5">40 </option>
+            <option value="20">25 </option>
+            <option value="25">20 </option>
+            <option value="50">10 </option>
+            <option value="100">5 </option>
+            <option value="500">1 </option>
+        </select>
+        <input type="button" onclick="speed()" value="Enviar"/>
+    </form>
+
+    <nav>
+        <ul class="ul2">
+            <li class="li2"><a class="a2" href="pagina1.html">Control Manual</a></li>
+            <li class="li2"><a class="a2" href="pagina2.html">Control Automático</a></li>
+            <li class="li2"><a class="a2" href="pagina3.html">Seguidor solar</a></li>
+        </ul>
+    </nav>
+</body>
+</html>

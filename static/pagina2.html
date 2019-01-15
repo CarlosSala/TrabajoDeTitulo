@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+    <title>Control Automático</title>
+    <meta charset="utf-8">
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="css/pagina2.css">
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        var socket = io.connect();
+
+        //------------- información venida desde el servidor web-------------------
+
+        socket.on('Reloj', reloj);
+        socket.on('contadorPaneo', paneo);
+        socket.on('contadorInclinacion', inclinacion);
+        socket.on('estadoDelServicio2', estado);
+
+        function reloj(data) {
+            var horas = data.horitas;
+            var minutos = data.minutitos;
+            var segundos = data.segunditos;
+
+            var str_horas = new String(horas);
+            var mh = str_horas;
+            if (str_horas.length == 1) mh = "0" + str_horas;
+
+            var str_minutos = new String(minutos);
+            var mm = str_minutos;
+            if (str_minutos.length == 1) mm = "0" + str_minutos;
+
+            var str_segundos = new String(segundos);
+            var ms = str_segundos;
+            if (str_segundos.length == 1) ms = "0" + str_segundos;
+
+            document.getElementById("hora").innerHTML = mh + ":" + mm + ":" + ms;
+
+            if (horas == 7 || horas == 8) {
+                document.getElementById("fotoCambia").src = "images/amanecer.jpg";
+            } else if (horas >= 9 && horas < 12) {
+                document.getElementById("fotoCambia").src = "images/manana.jpg";
+            } else if (horas >= 12 && horas <= 14) {
+                document.getElementById("fotoCambia").src = "images/medio_dia.jpg";
+            } else if (horas >= 15 && horas < 17) {
+                document.getElementById("fotoCambia").src = "images/tarde.jpg";
+            } else if (horas == 17) {
+                document.getElementById("fotoCambia").src = "images/tarde1.jpg";
+            } else if (horas >= 18) {
+                document.getElementById("fotoCambia").src = "images/noche.jpg";
+            } else if (horas >= 0 && horas <= 6) {
+                document.getElementById("fotoCambia").src = "images/madrugada.jpg";
+            }
+        }
+
+        function paneo(data) {
+            var p = ((JSON.parse(data) * 360) / 800);
+            document.getElementById("contadorP").innerHTML = "Paneo actual: " + p + "°";
+        }
+
+        function inclinacion(data) {
+            var i = ((JSON.parse(data) * 360) / 800);
+            document.getElementById("contadorI").innerHTML = "Inclinación actual: " + i + "°";
+        }
+
+        function estado(data) {
+            var e = JSON.parse(data);
+            if (e == 1) {
+                document.getElementById("estado").innerHTML = "Estado: Encendido";
+            } else {
+                document.getElementById("estado").innerHTML = "Estado: Detenido";
+            }
+        }
+
+        //------------------ información enviada al servidor web ------------------
+
+        function encender(data) {
+            socket.emit('inicioAutomatico', data);
+        }
+
+        window.onload = function() {
+            socket.emit('servicio', 2);
+        }
+    </script>
+
+</head>
+<body>
+    <div class="container">
+        <p id="estado">Estado: Detenido</p>
+        <ul>
+            <li><a onclick="encender(1)">Encender</a></li>
+            <li><a onclick="encender(0)">Detener</a></li>
+        </ul>
+    </div>
+
+    <p style="text-align:center">
+        <img id="fotoCambia" src="images/fases_del_dia.jpg">
+    </p>
+
+    <h2 id="hora">hora digital</h2>
+
+    <div class="posiciones">
+        <h2 id="contadorP"> contador</h2>
+        <h2 id="contadorI"> contador</h2>
+    </div>
+
+</body>
+</html>

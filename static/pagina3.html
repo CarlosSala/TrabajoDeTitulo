@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+    <title>Panel solar</title>
+    <meta charset="utf-8">
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="css/pagina3.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <h1 align="center">Seguidor Solar</h1>
+
+    <script>
+        var socket = io.connect();
+
+        //------------- información venida desde el servidor web-------------------
+
+        socket.on('contadorPaneo', paneo);
+        socket.on('contadorInclinacion', inclinacion);
+        socket.on('estadoDelServicio3', estado);
+
+        function paneo(data) {
+            var p = ((JSON.parse(data) * 360) / 800);
+            document.getElementById("contadorP").innerHTML = "Paneo actual: " + p + "°";
+        }
+
+        function inclinacion(data) {
+            var i = ((JSON.parse(data) * 360) / 800);
+            document.getElementById("contadorI").innerHTML = "Inclinación actual: " + i + "°";
+        }
+
+        function estado(data) {
+            var e = JSON.parse(data);
+            if (e == 1) {
+                document.getElementById("estado").innerHTML = "Estado: Encendido";
+            } else {
+                document.getElementById("estado").innerHTML = "Estado: Detenido";
+            }
+        }
+
+        //------------------ información enviada al servidor web ------------------
+
+        function encender(data) {
+            socket.emit('inicioSeguidor', data);
+        }
+
+        window.onload = function() {
+            socket.emit('servicio', 3);
+        }
+    </script>
+
+</head>
+<body>
+
+    <div class="posiciones" align=center>
+        <h2 align="center" id="contadorP"> contador</h2>
+        <h2 align="center" id="contadorI"> contador</h2>
+    </div>
+
+    <div class="container">
+        <p id="estado">Estado: Detenido</p>
+        <ul>
+            <li><a onclick="encender(1)">Encender</a></li>
+            <li><a onclick="encender(0)">Detener</a></li>
+        </ul>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+body {
+    width:610px;
+    height:615px;
+    margin:0px auto;
+}
+
+.proximasPosiciones {
+    width:180px;
+    height:150px;
+    margin:10px 415px;
+    position:absolute;
+    border-radius:10px;
+    background:#EEEDDB;
+    padding:5px;
+}
+
+.ayuda {
+    width:180px;
+    height:405px;
+    margin:10px 415px;
+    position:absolute;
+    border-radius:10px;
+    background:#edd124;
+    padding:5px;
+    top:170px;
+}
+
+.container {
+    background:#BDD5FB;
+    border-radius:10px;
+    width:400px;
+    height:120px;
+    position:absolute;
+    margin:10px 5px;
+    text-align:center;
+}
+
+ul {
+    padding:0px 0px 10px 5px;
+}
+
+li {
+    background:navy;
+    height:45px;
+    line-height:30px;
+    display:inline-block;
+    font-weight: bold;
+    width:85px;
+    border-radius:10px;
+    margin:0px 5px 0px 0px;
+}
+
+a {
+    display:inline-block;
+    margin:5px;
+    color:white;
+}
+
+a:hover{
+    color:gold;
+}
+
+a:active{ 
+    color:red;
+}
+
+#contadorP {
+    height:50px;
+    width:400px;
+    top:140px;
+    margin:0px 5px;
+    position:absolute;
+    background:#ffd700;
+    padding:20px 0px 0px;
+    border-radius:10px;
+    text-align:center;
+}
+
+#contadorI {
+    height:50px;
+    width:400px;
+    top:372px;
+    margin:0px 5px;
+    position:absolute;
+    background:#ffd700;
+    padding:20px 0px 0px;
+    border-radius:10px;
+    text-align:center;
+}
+
+.paneo {
+    height:150px;
+    width:400px;
+    position:absolute;
+    top:212px;
+    margin:0px 5px;
+    text-align:center;
+    background:#EEEDDB;
+    border-radius:10px;
+}
+
+.inclinacion {
+    height:150px;
+    width:400px;
+    position:absolute;
+    top:445px;
+    margin:0px 5px;
+    text-align:center;
+    background:#EEEDDB;
+    border-radius:10px;
+}
