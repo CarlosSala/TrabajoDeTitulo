@@ -1,78 +1,9 @@
-body {
-    width:600px;
-    height:580px;
-    margin:0px auto;
+
+
+.fondo {
+    background: #CD1236;
 }
 
-#estado {
-    font-family:Arial;
-	font-size:18px;
-    color:white;
-    font-weight:bold;
-    text-shadow:2px 2px black;
-}
-
-.container {
-   
-    border-radius:10px;
-    top:285px;
-    width:255px;
-    height:120px;
-    position:absolute;
-    margin:0px 10px;
-    text-align:center;
-}
-
-ul {
-    padding:0px 5px 10px 30px;
-}
-
- li {
-    background:green;
-    height:45px;
-    line-height:30px;
-    display:inline-block;
-    font-weight:bold;
-    width:85px;
-    border-radius:10px;
-    margin:0px 20px 0px 0px;
-}
-
-a {
-    display:inline-block;
-    margin:5px;
-    color:white;
-}
-
-a:hover { 
-    color:black;
-}
-
-a:active { 
-    color:red;
-}
-
-#fotoCambia {
-     width:575px;
-     height:400px;
-     border-radius:10px;
- }
- 
-#hora{
-    background:lightblue;
-    width:175px;
-    margin:0px 5px;
-    border-radius:5px;
-    position:absolute;
-    top:30px;
-    text-align:center;
-}
-
-.posiciones{
-    background:#E39CB0;
-    width:575px;
-    border-radius:10px;
-    margin:0px 12px;
-    padding:10px 0px;
-    text-align:center;
+.fondo1 {
+ background: #E9D7A5;
 }

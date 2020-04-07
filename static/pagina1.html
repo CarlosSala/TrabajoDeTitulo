@@ -1,11 +1,15 @@
 <!doctype html>
 <html>
+
 <head>
     <title>Control Manual</title>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="images/favicon.ico">
     <link rel="stylesheet" type="text/css" href="css/pagina1.css">
     <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <script>
         var socket = io.connect();
@@ -20,12 +24,12 @@
 
         function paneo(data) {
             var p = ((JSON.parse(data) * 360) / 800);
-            document.getElementById("contadorP").innerHTML = "Paneo actual: " + p + "°";
+            document.getElementById("contadorP").innerHTML = " " + p + "°";
         }
 
         function inclinacion(data) {
             var i = ((JSON.parse(data) * 360) / 800);
-            document.getElementById("contadorI").innerHTML = "Inclinación actual: " + i + "°";
+            document.getElementById("contadorI").innerHTML = " " + i + "°";
         }
 
         function estado(data) {
@@ -39,12 +43,12 @@
 
         function siguientePaneo(data) {
             var sp = ((JSON.parse(data) * 360) / 800);
-            document.getElementById("sp").innerHTML = "Siguiente posición de Paneo: " + sp + "°";
+            document.getElementById("sp").innerHTML = " " + sp + "°";
         }
 
         function siguienteInclinacion(data) {
             var si = ((JSON.parse(data) * 360) / 800);
-            document.getElementById("si").innerHTML = "Siguiente posición de Inclinación: " + si + "°";
+            document.getElementById("si").innerHTML = " " + si + "°";
         }
 
         //------------------ información enviada al servidor web ------------
@@ -77,19 +81,101 @@
             socket.emit('inicioManual', 1);
         }
 
-        window.onload = function() {
+        window.onload = function () {
             socket.emit('servicio', 1);
         }
     </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
 </head>
+
 <body>
 
-    <div class="proximasPosiciones">
-        <h3 id="sp" align="center">Paneo</h3>
-        <h3 id="si" align="center">Inclinación</h3>
-    </div>
+    <section class="container my-5">
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link px-2" href="index.html">PRINCIPAL</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link px-2" href="pagina2.html">CONTROL AUTOMÁTICO</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link px-2" href="pagina3.html">SEGUIDOR SOLAR</a>
+            </li>
+        </ul>
+    </section>
 
-    <div class="ayuda">
+    <section class="sticky-top">
+        <div class="row">
+            <div class="col-12">
+                <div class="fondo text-center py-4 rounded-bottom">
+                    <h4 id="estado" class="text-uppercase mb-4 text-white">Estado: Detenido</h4>
+                    <button class="btn btn-primary " onclick="window.location.reload()">Actualizar</button>
+                    <button class="btn btn-warning " onclick="Reset()">Reset</button>
+                    <button class="btn btn-success " onclick="encender(1)">Encender</button>
+                    <button class="btn btn-danger " onclick="encender(0)">Detener</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section class="container margen mb-5">
+        <div class="row">
+            <div class="col-md-8">
+                <form class="p-5" action="javascript:void(0)" name="usuarioForms" onsubmit="paneo1()">
+                    <p class="form-group">
+                        <label for="paneo">Ingrese posición de Paneo</label>
+                        <input type="number" class="form-control" name="paneo" min="0" max="360"
+                            placeholder="Valores entre 0 y 360°" required>
+                        <button class="btn btn-info mt-2" type="submit">Enviar</button>
+                    </p>
+                </form>
+            </div>
+            <div class="col-md-4 bg-info text-white text-center rounded pt-4">
+                <h4>PANEO</h4>
+                <h4>Actual:</h4>
+                <h4 id="contadorP">contador</h4>
+                <h4>Siguiente:</h4>
+                <h4 id="sp" align="center">Paneo</h4>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="container mb-5">
+        <div class="row">
+            <div class="col-md-8">
+                <form class="p-5" action="javascript:void(0)" name="usuarioForms1" onsubmit="inclinacion1()">
+                    <p class="form-group">
+                        <label for="inclinacion">Ingrese posición de Inclinación</label>
+                        <input type="number" class="form-control" name="inclinacion" min="0" max="180"
+                            placeholder="Valores entre 0 y 180°" required>
+                        <button class="btn btn-info mt-2" type="submit">Enviar</button>
+                    </p>
+                </form>
+            </div>
+            <div class="col-md-4 bg-info text-white text-center rounded pt-4">
+                <h4>INCLINACIÓN</h4>
+                <h4>Actual:</h4>
+               <h4 id="contadorI">contador</h4>
+                <h4>Siguiente:</h4>
+                 <h4 id="si" align="center">Inclinación</h4>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="alert alert-dark">
         <h3 align="center">Ayuda</h3>
         <dl>
             <dt><b>Actualizar</b></dt>
@@ -108,35 +194,6 @@
             <dd>Ordena al sistema ir a la posición inicial (0°).</dd>
         </dl>
     </div>
-
-    <div class="container">
-        <p id="estado">Estado: Detenido</p>
-        <ul>
-            <li><a onclick="window.location.reload()">Actualizar</a></li>
-            <li><a onclick="Reset()">Reset</a></li>
-            <li><a onclick="encender(1)">Encender</a></li>
-            <li><a onclick="encender(0)">Detener</a></li>
-        </ul>
-    </div>
-
-    <h2 id="contadorP"> contador</h2>
-    <h2 id="contadorI"> contador</h2>
-
-    <div class="paneo">
-        <h2>Ingrese Paneo</h2>
-        <form action="javascript:void(0)" name="usuarioForms" onsubmit="paneo1()">
-            <input type="number" style="width:200px; height:15px" min="0" max="360" placeholder="Ingrese un valor entre 0 y 360°" required autofocus>
-            <button type="submit">Enviar</button>
-        </form>
-    </div>
-
-    <div class="inclinacion">
-        <h2>Ingrese Inclinación</h2>
-        <form action="javascript:void(0)" name="usuarioForms1" onsubmit="inclinacion1()">
-            <input type="number" style="width:200px; height:15px" min="0" max="180" placeholder="Ingrese un valor entre 0 y 180°" required>
-            <button type="submit">Enviar</button>
-        </form>
-    </div>
-
 </body>
+
 </html>
